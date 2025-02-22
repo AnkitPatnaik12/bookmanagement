@@ -1,6 +1,6 @@
-package repository;
+package com.project.bookmanagement.repository;
 
-import model.User;
+import com.project.bookmanagement.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

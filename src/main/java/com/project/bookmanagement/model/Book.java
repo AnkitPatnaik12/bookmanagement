@@ -1,4 +1,4 @@
-package model;
+package com.project.bookmanagement.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

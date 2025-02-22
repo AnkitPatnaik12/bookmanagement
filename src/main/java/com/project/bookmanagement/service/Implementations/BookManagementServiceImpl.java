@@ -1,7 +1,7 @@
-package service.Implementations;
+package com.project.bookmanagement.service.Implementations;
 
 import org.springframework.stereotype.Service;
-import service.BookManagementService;
+import com.project.bookmanagement.service.BookManagementService;
 @Service
 public class BookManagementServiceImpl implements BookManagementService {
     @Override
