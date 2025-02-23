@@ -4,6 +4,9 @@ import com.project.bookmanagement.dto.AuthenticationReq;
 import com.project.bookmanagement.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +18,7 @@ import com.project.bookmanagement.repository.UserRepository;
 @RequestMapping("/auth")
 public class UserAuthenticationController {
     @Autowired
-    AuthenticationManager authorizationManager;
+    AuthenticationManager authenticateManager;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -32,5 +35,18 @@ public class UserAuthenticationController {
         newUser.setPassword(passwordEncoder.encode(authRequest.getPassword()));
         userRepository.save(newUser);
         return "User registered successfully!";
+    }
+    @PostMapping("/login")
+    public String authenticateAndGetToken(@RequestBody AuthenticationReq authRequest) {
+        Authentication authentication = authenticateManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
+        );
+
+        if (authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return "logged in";
+        } else {
+            throw new RuntimeException("Invalid credentials");
+        }
     }
 }
