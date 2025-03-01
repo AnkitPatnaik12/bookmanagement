@@ -2,11 +2,13 @@ package com.project.bookmanagement.controller;
 
 import com.project.bookmanagement.dto.AuthenticationReq;
 import com.project.bookmanagement.model.User;
+import com.project.bookmanagement.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,8 @@ public class UserAuthenticationController {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    JwtService jwtService;
 
     @PostMapping("/signup")
     public String registerUser(@RequestBody AuthenticationReq authRequest) {
@@ -43,10 +47,9 @@ public class UserAuthenticationController {
         );
 
         if (authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return "logged in";
+            return jwtService.generateToken(authRequest.getUsername());
         } else {
-            throw new RuntimeException("Invalid credentials");
+            throw new UsernameNotFoundException("Invalid user request!");
         }
     }
 }
